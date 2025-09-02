@@ -9,6 +9,20 @@ public class Main {
     public static void main(String[] args) {
 
 
+        String dbFileName = null;
+        for (int i = 0; i < args.length; i++) {
+            if ("-fileName".equals(args[i]) && i + 1 < args.length) {
+                dbFileName = args[i + 1];
+                break;
+            }
+        }
+        if (dbFileName == null) {
+            System.out.println("Please, specify file name with argument -fileName");
+            return;
+        }
+
+        DatabaseManager dbManager = new DatabaseManager(dbFileName);
+
         Scanner scanner = new Scanner(System.in);
 
         Map<String, CardGenerator> accounts = new HashMap<>();
@@ -24,24 +38,33 @@ public class Main {
                 case 1:
                     System.out.println();
                     System.out.println("Your card has been created");
-                    System.out.println("Your card number:");
+                    // ...
                     CardGenerator newAccount = new CardGenerator();
                     newAccount.createCardNumber();
-                    System.out.println(newAccount.getCardNumber());
+                    String newCardNumber = newAccount.getCardNumber();
+                    String newPin = newAccount.generate_PinCode();
+
+                    System.out.println("Your card number:");
+                    System.out.println(newCardNumber);
                     System.out.println("Your card PIN:");
-                    newAccount.generate_PinCode();
-                    System.out.println(newAccount.getPinCode());
-                    accounts.put(newAccount.getCardNumber(), newAccount);
+                    System.out.println(newPin);
+
+                    dbManager.insertCard(newCardNumber, newPin);
+
                     System.out.println();
                     break;
+
                 case 2:
                     System.out.println();
                     System.out.println("Enter your card number:");
                     String cardNumber = scanner.next();
                     System.out.println("Enter your PIN:");
                     String pin = scanner.next();
-                    CardGenerator account = accounts.get(cardNumber);
-                    if (account == null || !account.getPinCode().equals(pin)) {
+
+
+                    CardGenerator account = dbManager.findCard(cardNumber, pin);
+
+                    if (account == null) {
                         System.out.println();
                         System.out.println("Wrong card number or PIN!");
                         System.out.println();
@@ -50,30 +73,6 @@ public class Main {
                         System.out.println("You have successfully logged in!");
                         System.out.println();
 
-                        boolean loggedIn = true;
-                        while (loggedIn) {
-                            System.out.println("1. Balance");
-                            System.out.println("2. Log out");
-                            System.out.println("0. Exit");
-
-                            input = scanner.nextInt();
-
-                            switch (input) {
-                                case 1:
-                                    System.out.println("Balance: 0");
-                                    break;
-                                case 2:
-                                    System.out.println();
-                                    System.out.println("You have successfully logged out!");
-                                    System.out.println();
-                                    loggedIn = false;
-                                    break;
-                                case 0:
-                                    System.out.println("\nBye!");
-                                    loggedIn = false;
-                                    input = 0;
-                            }
-                        }
                     }
                     break;
                 case 0:
