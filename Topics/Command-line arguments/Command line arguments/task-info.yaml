@@ -1,0 +1,15 @@
+type: choice
+is_multiple_choice: true
+options:
+  - text: "Are required to be provided on program start, otherwise the code won't run."
+  - text: Can be manually handled in the main method.
+  - text: Have to be listed after the Main class name when starting the program.
+  - text: Are accepted as a String array items.
+files:
+  - name: src/Task.java
+    visible: true
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/11888#comment
+status: Solved
+record: -1
+local_check: false
